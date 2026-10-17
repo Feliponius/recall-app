@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<title>Install ReCall</title>
+<style>
+  :root { --teal:#0f766e; --ink:#0f172a; --muted:#475569; --line:#e2e8f0; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; color:var(--ink); background:#f8fafc; }
+  header { background:var(--teal); color:#fff; padding:22px 20px 18px; }
+  header h1 { margin:0; font-size:26px; } header p { margin:4px 0 0; opacity:.85; }
+  main { max-width:560px; margin:0 auto; padding:18px 18px 40px; }
+  .card { background:#fff; border:1px solid var(--line); border-radius:16px; padding:18px; margin:14px 0; }
+  .btn { display:block; text-align:center; text-decoration:none; font-weight:700; padding:15px; border-radius:999px; margin:10px 0; font-size:17px; }
+  .primary { background:var(--teal); color:#fff; } .secondary { background:#e0f2f1; color:#134e4a; }
+  ol { padding-left:22px; margin:6px 0; } li { margin:8px 0; }
+  .muted { color:var(--muted); font-size:14px; } .tag { display:inline-block; background:#ccfbf1; color:#134e4a; border-radius:999px; padding:2px 10px; font-size:13px; font-weight:600; }
+  .warn { background:#fef3c7; border-color:#fde68a; }
+  .hide { display:none; } code { background:#f1f5f9; padding:1px 5px; border-radius:6px; }
+</style>
+</head>
+<body>
+<header><h1>ReCall</h1><p>Never miss a callback. Android app install</p></header>
+<main>
+  <div id="setup" class="card hide">
+    <div class="tag" id="role">Setup code</div>
+    <h2 style="margin:10px 0 4px" id="biz">Set up ReCall</h2>
+    <p class="muted" style="margin:0">Already installed ReCall? Open it with this setup code:</p>
+    <a class="btn primary" id="open" href="#">Open in ReCall</a>
+    <p class="muted" style="margin:0">Not installed yet? Follow the steps below, then scan the same QR code again.</p>
+  </div>
+
+  <div id="desktop" class="card warn hide">ReCall runs on Android phones. Open this page on the phone (scan the QR code with its camera).</div>
+
+  <div class="card">
+    <h2 style="margin-top:0">Install in 3 steps</h2>
+    <ol>
+      <li><b>Samsung phones:</b> open <b>Settings › Security and privacy › Auto Blocker</b> and turn it <b>off</b>.
+        (Other phones: skip this.)</li>
+      <li>Tap <b>Download ReCall</b>. If the browser warns about the file, tap <b>Download anyway</b>.
+        <a class="btn primary" id="dl" href="https://github.com/Feliponius/recall-app/releases/latest/download/ReCall.apk">Download ReCall</a>
+        <span class="muted" id="ver"></span></li>
+      <li>Open the downloaded file. When asked, allow your browser to <b>install unknown apps</b>, then tap <b>Install</b>.</li>
+    </ol>
+    <p><b>Then:</b> scan your business's setup QR code again with the camera (or tap <b>Open in ReCall</b> above).
+      ReCall opens already set up for the business.</p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">After setup</h3>
+    <ul>
+      <li><b>Business phone:</b> allow Call log, Notifications and "Run in background". On Samsung also set
+        Settings › Apps › ReCall › Battery › <b>Unrestricted</b>.</li>
+      <li><b>Owner view:</b> view-only. It never reads the owner's own calls. Missed-call alerts can be turned on in ReCall › Settings.</li>
+      <li>Updates arrive inside the app (an "Update available" banner).</li>
+    </ul>
+  </div>
+
+  <p class="muted">Privacy: a setup code sits after the <code>#</code> in this page's address. Browsers never send that part to any server,
+    and this page has no analytics, cookies or third-party content. No setup code? Ask your ReCall provider for the business's setup sheet.</p>
+</main>
+<script>
+(function () {
+  var BASE = 'https://feliponius.github.io/recall-app/';
+  var ua = navigator.userAgent || '';
+  if (!/Android/i.test(ua)) document.getElementById('desktop').classList.remove('hide');
+  fetch(BASE + 'manifest.json', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (m) {
+    document.getElementById('ver').textContent = 'Version ' + m.versionName;
+    if (m.apkUrl) document.getElementById('dl').href = m.apkUrl;
+  }).catch(function () {});
+  var h = (location.hash || '').slice(1);
+  if (h.indexOf('v1.') !== 0) return;
+  var info = {};
+  try { info = JSON.parse(decodeURIComponent(escape(atob(h.slice(3).replace(/-/g, '+').replace(/_/g, '/'))))); } catch (e) { return; }
+  document.getElementById('setup').classList.remove('hide');
+  document.getElementById('role').textContent = info.m === 'o' ? 'Owner view (view only)' : 'Business phone';
+  if (info.n) document.getElementById('biz').textContent = 'Set up ReCall for ' + info.n;
+  // Opens the installed app via an Android intent; the code never leaves the phone.
+  document.getElementById('open').href = 'intent://config?p=' + encodeURIComponent(h) +
+    '#Intent;scheme=mcr;package=com.feliponius.mcr;S.browser_fallback_url=' + encodeURIComponent(BASE + 's/') + ';end';
+})();
+</script>
+</body>
+</html>
