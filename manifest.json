@@ -1,9 +1,9 @@
 {
-  "versionCode": 21,
-  "versionName": "0.3.9",
-  "sha256": "939c7015ffe9d61e0b851c6c22bf132552e344f6a01fb145c34b46f27fab9e02",
-  "size": 5469334,
+  "versionCode": 22,
+  "versionName": "0.3.10",
+  "sha256": "28ca35643e11cc7081fc4f47559bd1a2b00585529a71927dc355c9e25dc4f045",
+  "size": 5469502,
   "certSha256": "8c3d6807109a847532596eebd892c6a914d5ae270f4ff4c226bb99d77d9c0e14",
-  "apkUrl": "https://github.com/Feliponius/recall-app/releases/download/v0.3.9/ReCall.apk",
+  "apkUrl": "https://github.com/Feliponius/recall-app/releases/download/v0.3.10/ReCall.apk",
   "package": "com.feliponius.mcr"
 }
